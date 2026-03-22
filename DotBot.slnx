@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Bot/Bot.csproj" />
+  <Project Path="Web/Web.csproj" />
+</Solution>
