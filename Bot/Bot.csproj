@@ -9,7 +9,10 @@
 
   <ItemGroup>
     <PackageReference Include="Discord.Net" Version="3.19.1" />
-    <PackageReference Include="DotNetEnv" Version="3.1.1" />
+    <ProjectReference Include="..\Discord.Shared\Discord.Shared.csproj" />
   </ItemGroup>
+
+  <!-- <ItemGroup>
+  </ItemGroup> -->
 
 </Project>

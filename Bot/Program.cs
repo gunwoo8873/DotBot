@@ -3,27 +3,18 @@ using System;
 // Discord.NET library
 using Discord;
 using Discord.WebSocket;
-// Read Env library
-using DotNetEnv;
+using Discord.Shared;
 
 namespace Bot;
 
 class RunTime
 {
-  private static DiscordSocketClient _client;
+  private static DiscordSocketClient _client = null!;
   
   private string GetToken(string t)
   {
-    Env.Load();
-
-    var _token = Environment.GetEnvironmentVariable(t);
-    if (string.IsNullOrEmpty(_token))
-    {
-      Console.WriteLine($"Error: {t} is not set in environment variables.");
-      Environment.Exit(1);
-    }
-
-    return _token;
+    EnvLoader.LoadFromSolutionRelativePath("Bot/.env");
+    return EnvLoader.GetRequired(t);
   }
 
   private static Task Log(LogMessage msg)
