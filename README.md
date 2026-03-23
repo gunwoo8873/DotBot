@@ -1,4 +1,4 @@
-# Wellcomto DotBot!
+# Wellcom to DotBot!
 
 [1. Summary](#project-summay)
 [2. RoadMat](#roadmap)
