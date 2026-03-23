@@ -1,42 +1,110 @@
 ﻿// Standard library
 using System;
+using System.Net.Sockets;
+
 // Discord.NET library
 using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
-
+// Read to Environment Variables library
 using DotNetEnv;
 
 // using Discord.Shared;
 
 namespace Bot;
 
-class RunTime
+class Configure
 {
-  private static DiscordSocketClient _client = null!;
-  
-  private string GetToken(string t)
+  public string GetToken(string t)
   {
     Env.Load();
 
     var _token = Environment.GetEnvironmentVariable(t);
-    return _token;
+    return _token ?? throw new InvalidOperationException($"Environment variable '{t}' not found.");
   }
 
+  public string GetChannelTopic(ulong id)
+  {
+    id = ulong.Parse(GetToken("DISCORD_CHANNEL_ID"));
+
+    var channel = Scokets._client.GetChannel(id) as SocketTextChannel;
+    return channel?.Topic ?? "No topic set.";
+  }
+
+  public SocketGuildUser GetGuildOwner(ulong id)
+  {
+    var guild = Scokets._client.GetGuild(id);
+    return guild?.Owner ?? throw new InvalidOperationException($"Guild with ID '{id}' not found.");
+  }
+}
+
+class Scokets
+{
+  public static DiscordSocketClient _client = null!;
+}
+
+class Services
+{
+  public Services(DiscordSocketClient c, CommandService s)
+  {
+    c.Log += LogAsync;
+    s.Log += LogAsync;
+  }
+
+  private Task LogAsync(LogMessage msg)
+  {
+    if (msg.Exception is CommandException cmdEx)
+    {
+      Console.WriteLine($"""
+      [Command/{msg.Severity}] {cmdEx.Command.Aliases.First()}
+      failed to execute in {cmdEx.Context.Channel}
+      """);
+    }
+    else
+    {
+      Console.WriteLine($"[General/{msg.Severity}] {msg}");
+    }
+
+    return Task.CompletedTask;
+  }
+}
+
+class RunTime
+{
   private static Task Log(LogMessage msg)
   {
     Console.WriteLine(msg.ToString());
     return Task.CompletedTask;
   }
 
-  static async Task Main()
+  private static async Task MessageUpdate(Cacheable<IMessage, ulong> before, SocketMessage after, ISocketMessageChannel channel)
   {
-    var token = new RunTime().GetToken("DISCORD_CLIENT_TOKEN");
+    var message = await before.GetOrDownloadAsync();
+    Console.WriteLine($"{message} -> {after}");
+  }
 
-    _client = new DiscordSocketClient();
-    _client.Log += Log;
+  static async Task Main(string[] args)
+  {
+    var token = new Configure().GetToken("DISCORD_CLIENT_TOKEN");
 
-    await _client.LoginAsync(TokenType.Bot, token);
-    await _client.StartAsync();
+    Scokets._client = new DiscordSocketClient();
+    Scokets._client.Log += Log;
+
+    var _config = new DiscordSocketConfig { MessageCacheSize = 100 };
+    Scokets._client = new DiscordSocketClient(_config);
+
+    await Scokets._client.LoginAsync(TokenType.Bot, token);
+    await Scokets._client.StartAsync();
+
+    Scokets._client.MessageUpdated += MessageUpdate;
+    Scokets._client.Ready += () => 
+    {
+        Console.WriteLine($"""
+        Bot is connected!
+        {token}
+        """);
+        return Task.CompletedTask;
+    };
 
     await Task.Delay(-1);
   }

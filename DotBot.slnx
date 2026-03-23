@@ -1,5 +1,5 @@
 <Solution>
   <Project Path="Bot/Bot.csproj" />
-  <Project Path="Discord.Shared/Discord.Shared.csproj" />
+  <Project Path="Shared/Shared.csproj" />
   <Project Path="Web/Web.csproj" />
 </Solution>
