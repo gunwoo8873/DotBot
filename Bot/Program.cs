@@ -37,7 +37,7 @@ class Configure
   }
 }
 
-class Scokets
+class Sockets
 {
   public static DiscordSocketClient _client = null!;
 }
@@ -86,8 +86,8 @@ class RunTime
   {
     var token = new Configure().GetToken("DISCORD_CLIENT_TOKEN");
 
-    Scokets._client = new DiscordSocketClient();
-    Scokets._client.Log += Log;
+    Sockets._client = new DiscordSocketClient();
+    Sockets._client.Log += Log;
 
     var _config = new DiscordSocketConfig { MessageCacheSize = 100 };
     Scokets._client = new DiscordSocketClient(_config);
