@@ -97,7 +97,7 @@ class RunTime
 
     Scokets._client.MessageUpdated += MessageUpdate;
     //// Warring: Terminal inside output if Bot Token, but it is for testing purpose only.
-    Scokets._client.Ready += () => 
+    Sockets._client.Ready += () => 
     {
         Console.WriteLine($"""
         Bot is connected!
