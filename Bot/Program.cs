@@ -26,13 +26,13 @@ class Configure
   {
     id = ulong.Parse(GetToken("DISCORD_CHANNEL_ID"));
 
-    var channel = Scokets._client.GetChannel(id) as SocketTextChannel;
+    var channel = Sockets._client.GetChannel(id) as SocketTextChannel;
     return channel?.Topic ?? "No topic set.";
   }
 
   public SocketGuildUser GetGuildOwner(ulong id)
   {
-    var guild = Scokets._client.GetGuild(id);
+    var guild = Sockets._client.GetGuild(id);
     return guild?.Owner ?? throw new InvalidOperationException($"Guild with ID '{id}' not found.");
   }
 }
@@ -92,10 +92,10 @@ class RunTime
     var _config = new DiscordSocketConfig { MessageCacheSize = 100 };
     Scokets._client = new DiscordSocketClient(_config);
 
-    await Scokets._client.LoginAsync(TokenType.Bot, token);
-    await Scokets._client.StartAsync();
+    await Sockets._client.LoginAsync(TokenType.Bot, token);
+    await Sockets._client.StartAsync();
 
-    Scokets._client.MessageUpdated += MessageUpdate;
+    Sockets._client.MessageUpdated += MessageUpdate;
     //// Warring: Terminal inside output if Bot Token, but it is for testing purpose only.
     Sockets._client.Ready += () => 
     {
