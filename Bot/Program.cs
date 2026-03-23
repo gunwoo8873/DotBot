@@ -1,7 +1,6 @@
 ﻿// Standard library
 using System;
 using System.Net.Sockets;
-
 // Discord.NET library
 using Discord;
 using Discord.Commands;
@@ -97,6 +96,7 @@ class RunTime
     await Scokets._client.StartAsync();
 
     Scokets._client.MessageUpdated += MessageUpdate;
+    //// Warring: Terminal inside output if Bot Token, but it is for testing purpose only.
     Scokets._client.Ready += () => 
     {
         Console.WriteLine($"""
