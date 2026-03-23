@@ -3,7 +3,10 @@ using System;
 // Discord.NET library
 using Discord;
 using Discord.WebSocket;
-using Discord.Shared;
+
+using DotNetEnv;
+
+// using Discord.Shared;
 
 namespace Bot;
 
@@ -13,8 +16,10 @@ class RunTime
   
   private string GetToken(string t)
   {
-    EnvLoader.LoadFromSolutionRelativePath("Bot/.env");
-    return EnvLoader.GetRequired(t);
+    Env.Load();
+
+    var _token = Environment.GetEnvironmentVariable(t);
+    return _token;
   }
 
   private static Task Log(LogMessage msg)
@@ -29,7 +34,6 @@ class RunTime
 
     _client = new DiscordSocketClient();
     _client.Log += Log;
-
 
     await _client.LoginAsync(TokenType.Bot, token);
     await _client.StartAsync();
