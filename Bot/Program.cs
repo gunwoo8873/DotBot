@@ -90,7 +90,7 @@ class RunTime
     Sockets._client.Log += Log;
 
     var _config = new DiscordSocketConfig { MessageCacheSize = 100 };
-    Scokets._client = new DiscordSocketClient(_config);
+    Sockets._client = new DiscordSocketClient(_config);
 
     await Sockets._client.LoginAsync(TokenType.Bot, token);
     await Sockets._client.StartAsync();
